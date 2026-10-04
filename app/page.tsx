@@ -34,6 +34,7 @@ export default function Home() {
   const [model] = useState(
     process.env.NEXT_PUBLIC_OLLAMA_MODEL || "qwen3:8b",
   );
+  const [docTitle, setDocTitle] = useState("Document Report");
 
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -200,6 +201,8 @@ export default function Home() {
             onChange={setInputText}
             disabled={isLoading || isStreaming}
             detection={liveInputDetection}
+            docTitle={docTitle}
+            onDocTitleChange={setDocTitle}
           />
 
           <RewritePanel
@@ -209,6 +212,7 @@ export default function Home() {
             isStreaming={isStreaming}
             error={error}
             humanScore={result?.rewrittenDetection?.humanScore}
+            docTitle={docTitle}
             onClear={handleClearOutput}
             onRewriteAgain={handleRewriteStream}
           />
@@ -358,6 +362,27 @@ export default function Home() {
                       </div>
                     );
                   })}
+                </div>
+
+                {/* Continuous Model Improvement Banner */}
+                <div className="bg-gradient-to-r from-indigo-50/80 via-blue-50/80 to-purple-50/80 border border-indigo-100 rounded-lg p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs mt-3">
+                  <div className="flex items-start sm:items-center gap-2.5">
+                    <span className="flex h-2.5 w-2.5 relative mt-1 sm:mt-0 shrink-0">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-indigo-600" />
+                    </span>
+                    <div>
+                      <span className="font-bold text-indigo-950">
+                        Keep Improving the Model for Future Benchmarks:
+                      </span>{" "}
+                      <span className="text-indigo-800">
+                        Live sentence heuristics, burstiness variability, and paragraph entropy profiles are continuously monitored to iteratively train and upgrade the model weights to defeat next-generation commercial AI detectors (Turnitin, GPTZero, CopyLeaks).
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-bold text-indigo-700 uppercase tracking-wider bg-white px-2 py-1 rounded shadow-xs border border-indigo-200 shrink-0 self-start sm:self-center">
+                    Future-Ready AI Engine
+                  </span>
                 </div>
               </div>
             )}
